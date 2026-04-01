@@ -6,38 +6,31 @@
 
 ## Project Description
 
-> TODO:
-> Describe the purpose of this project in your own words.
->
-> You should include:
-> - What problem this project solves
-> - What the machine learning pipeline does
-> - What models are used
+This project builds a machine learning pipeline to identify credit card customers most likely to churn. It refactors an exploratory Jupyter notebook into a production-quality Python package with proper testing, logging, and code quality standards.
+
+The pipeline trains two classifiers — a Logistic Regression and a Random Forest — on bank customer data, evaluates their performance, and saves the trained models for downstream use.
 
 ---
 
 ## Files and Data Description
 
-> TODO:
-> Describe the main files and dataset used in this project.
-
 ### Main Files
 
 - `churn_library.py`  
-  > TODO: Explain what this file does
+  Core ML pipeline library. Contains all functions for data loading, EDA, feature engineering, model training, and evaluation.
 
 - `churn_script_logging_and_tests.py`  
-  > TODO: Explain what this file does
+  Unit tests for every function in `churn_library.py`. Logs INFO and ERROR messages to `logs/churn_library.log`.
 
 - `churn_notebook.ipynb`  
-  > TODO: Explain the role of this notebook
+  Original reference notebook containing the working solution before refactoring.
 
 ---
 
 ### Data
 
 - `data/bank_data.csv`  
-  > TODO: Describe the dataset (features, target, etc.)
+  10,127 bank customer records with 21 features including demographics, account behaviour, and transaction history. The target column is `Attrition_Flag` (converted to binary `Churn`: 0 = Existing Customer, 1 = Attrited Customer).
 
 ---
 
@@ -54,14 +47,19 @@ After running the project, outputs will be saved to:
 
 ## Running the Files
 
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
 ### 1. Run the Pipeline
 
 ```bash
 python churn_library.py
 ```
 
-> TODO:
-> Briefly describe what happens when this script runs
+Loads the data, performs EDA, encodes features, trains both models, saves evaluation plots, and stores trained models as `.pkl` files.
 
 ---
 
@@ -71,37 +69,42 @@ python churn_library.py
 python churn_script_logging_and_tests.py
 ```
 
-> TODO:
-> Explain what the test script does and what is logged
+Runs all unit tests and writes detailed INFO/ERROR messages to `logs/churn_library.log`. Tests validate that output files (EDA images, result plots, model files) are created correctly.
+
+---
+
+### 3. Code Quality
+
+```bash
+# Auto-format
+autopep8 --in-place --aggressive --aggressive churn_library.py
+autopep8 --in-place --aggressive --aggressive churn_script_logging_and_tests.py
+
+# Check lint score (target: > 7.0)
+pylint churn_library.py
+pylint churn_script_logging_and_tests.py
+```
 
 ---
 
 ## Expected Outputs
 
-> TODO:
-> List and describe the expected outputs of the project
-
-Minimum expected outputs:
-
 - Models:
   - `models/rfc_model.pkl`
   - `models/logistic_model.pkl`
 
-- Images:
-  - EDA plots in `images/eda/`
-  - Model evaluation plots in `images/results/`
+- EDA plots in `images/eda/`:
+  - `churn_distribution.png`
+  - `customer_age_distribution.png`
+  - `marital_status_distribution.png`
+  - `total_trans_ct_distribution.png`
+  - `heatmap.png`
+
+- Model evaluation plots in `images/results/`:
+  - `rf_results.png`
+  - `logistic_results.png`
+  - `feature_importances.png`
+  - `roc_curve_result.png`
 
 - Logs:
   - `logs/churn_library.log`
-
----
-
-## Notes
-
-> TODO:
-> Add any additional notes or assumptions about your implementation
-
-Examples:
-- How logging is handled
-- Any assumptions about the dataset
-- Any limitations of the model

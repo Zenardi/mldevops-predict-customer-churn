@@ -1,0 +1,6 @@
+2026-04-01 09:44:17,684 - INFO - Testing import_data: SUCCESS - file loaded
+2026-04-01 09:44:17,684 - INFO - Testing import_data: SUCCESS - dataframe shape (10127, 22)
+2026-04-01 09:44:18,094 - INFO - Testing perform_eda: SUCCESS - all EDA images saved
+2026-04-01 09:44:18,112 - INFO - Testing encoder_helper: SUCCESS - encoded columns present
+2026-04-01 09:44:18,128 - INFO - Testing perform_feature_engineering: SUCCESS - train/test split shapes: x_train=(7088, 19) x_test=(3039, 19)
+2026-04-01 09:44:22,091 - INFO - Testing train_models: SUCCESS - models and images saved
