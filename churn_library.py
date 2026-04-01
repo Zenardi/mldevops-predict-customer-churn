@@ -17,7 +17,12 @@ import pandas as pd
 import seaborn as sns
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import RocCurveDisplay, classification_report
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    PrecisionRecallDisplay,
+    RocCurveDisplay,
+    classification_report,
+)
 from sklearn.model_selection import RandomizedSearchCV, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -280,15 +285,47 @@ def train_models(x_train, x_test, y_train, y_test):
         os.path.join(RESULTS_DIR, 'feature_importances.png'),
     )
 
-    plt.figure(figsize=(15, 8))
-    ax = plt.gca()
-    lrc_plot = RocCurveDisplay.from_estimator(lrc, x_test, y_test)
+    # ROC curves — both models on the same axes
+    fig, ax = plt.subplots(figsize=(15, 8))
     RocCurveDisplay.from_estimator(
-        cv_rfc.best_estimator_, x_test, y_test, ax=ax, alpha=0.8
+        lrc, x_test, y_test, ax=ax, alpha=0.8, name='Logistic Regression'
     )
-    lrc_plot.plot(ax=ax, alpha=0.8)
-    plt.savefig(os.path.join(RESULTS_DIR, 'roc_curve_result.png'))
-    plt.close()
+    RocCurveDisplay.from_estimator(
+        cv_rfc.best_estimator_, x_test, y_test, ax=ax, alpha=0.8,
+        name='Random Forest'
+    )
+    ax.set_title('ROC Curves — Logistic Regression vs Random Forest')
+    plt.savefig(os.path.join(RESULTS_DIR, 'roc_curve_result.png'),
+                bbox_inches='tight')
+    plt.close(fig)
+
+    # Precision-recall curves — both models on the same axes
+    fig, ax = plt.subplots(figsize=(10, 6))
+    PrecisionRecallDisplay.from_estimator(
+        lrc, x_test, y_test, ax=ax, name='Logistic Regression'
+    )
+    PrecisionRecallDisplay.from_estimator(
+        cv_rfc.best_estimator_, x_test, y_test, ax=ax, name='Random Forest'
+    )
+    ax.set_title('Precision-Recall Curves')
+    plt.savefig(os.path.join(RESULTS_DIR, 'precision_recall_curves.png'),
+                bbox_inches='tight')
+    plt.close(fig)
+
+    # Confusion matrices
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    ConfusionMatrixDisplay.from_estimator(
+        lrc, x_test, y_test, ax=axes[0], colorbar=False
+    )
+    axes[0].set_title('Logistic Regression')
+    ConfusionMatrixDisplay.from_estimator(
+        cv_rfc.best_estimator_, x_test, y_test, ax=axes[1], colorbar=False
+    )
+    axes[1].set_title('Random Forest')
+    fig.suptitle('Confusion Matrices')
+    plt.savefig(os.path.join(RESULTS_DIR, 'confusion_matrices.png'),
+                bbox_inches='tight')
+    plt.close(fig)
 
     joblib.dump(cv_rfc.best_estimator_, os.path.join(MODELS_DIR, 'rfc_model.pkl'))
     joblib.dump(lrc, os.path.join(MODELS_DIR, 'logistic_model.pkl'))

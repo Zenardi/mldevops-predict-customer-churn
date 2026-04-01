@@ -157,6 +157,8 @@ def test_train_models(train_models):
             'logistic_results.png',
             'feature_importances.png',
             'roc_curve_result.png',
+            'precision_recall_curves.png',
+            'confusion_matrices.png',
         ]
         for fname in expected_images:
             fpath = os.path.join(cls.RESULTS_DIR, fname)
